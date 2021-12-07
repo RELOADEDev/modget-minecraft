@@ -91,7 +91,7 @@ dependencies {
 
     compileOnly "com.github.spotbugs:spotbugs:${project.spotbugs_version}"
 
-    modImplementation "com.terraformersmc:modmenu:2.0.14"
+    modImplementation "com.terraformersmc:modmenu:3.0.0"
     modApi("me.shedaniel.cloth:cloth-config-fabric:5.1.40") {
         exclude(group: "net.fabricmc.fabric-api")
     }

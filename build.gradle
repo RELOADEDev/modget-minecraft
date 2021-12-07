@@ -5,8 +5,8 @@ plugins {
     id "com.modrinth.minotaur" version "1.2.1"
 }
 
-sourceCompatibility = JavaVersion.VERSION_17
-targetCompatibility = JavaVersion.VERSION_17
+sourceCompatibility = JavaVersion.VERSION_16
+targetCompatibility = JavaVersion.VERSION_16
 
 // def mod_version = project.mod_version as Object
 // version = "${mod_version}+${project.minecraft_version}"
@@ -91,14 +91,12 @@ dependencies {
 
     compileOnly "com.github.spotbugs:spotbugs:${project.spotbugs_version}"
 
-    modRuntimeOnly "fr.catcore:server-translations-api:1.4.8+1.18-pre1"
-    modImplementation "net.fabricmc:fabric-language-kotlin:1.7.0+kotlin.1.6.0"
-    modImplementation "com.terraformersmc:modmenu:3.0.0"
-    modApi("me.shedaniel.cloth:cloth-config-fabric:6.0.45") {
+    modImplementation "com.terraformersmc:modmenu:2.0.14"
+    modApi("me.shedaniel.cloth:cloth-config-fabric:5.1.40") {
         exclude(group: "net.fabricmc.fabric-api")
     }
-    modImplementation "net.fabricmc.fabric-api:fabric-api:0.43.1+1.18"
-
+    modRuntimeOnly "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+    modRuntimeOnly "fr.catcore:server-translations-api:${project.server_translations_version}"
 
     if (project.use_third_party_mods) {
         configurations {
@@ -114,8 +112,6 @@ dependencies {
             }
         }
 
-//        modRuntimeOnly "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-//        modRuntimeOnly "fr.catcore:server-translations-api:${project.server_translations_version}"
 //        // modRuntimeOnly "curse.maven:modmenu-308702:3199797"
 //        modRuntimeOnly "curse.maven:borderless-mining-310205:3033277"
 //        modRuntimeOnly "curse.maven:dark-loading-screen-365727:3185761"

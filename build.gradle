@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '0.10.local'
+    id 'fabric-loom' version '0.10-SNAPSHOT'
     // id 'com.matthewprenger.cursegradle' version '1.4.0'
     id 'maven-publish'
     id "com.modrinth.minotaur" version "1.2.1"
@@ -85,9 +85,9 @@ dependencies {
     }
 
     // Modget Manifest API
-    include implementation("com.github.ReviversMC.modget-manifest-api:modget-manifest-api-compat:${modget_manifest_api_version}")
-    include implementation("com.github.ReviversMC.modget-manifest-api:modget-manifest-api-spec3:${modget_manifest_api_version}")
-    include implementation("com.github.ReviversMC.modget-manifest-api:modget-manifest-api-spec4:${modget_manifest_api_version}")
+    include implementation("com.github.ReviversMC.modget-manifest-api:compat:${modget_manifest_api_version}")
+    include implementation("com.github.ReviversMC.modget-manifest-api:spec3:${modget_manifest_api_version}")
+    include implementation("com.github.ReviversMC.modget-manifest-api:spec4:${modget_manifest_api_version}")
     // include implementation(files("libs/modget-manifest-api-compat-0.1.0.jar"))
     // include implementation(files("libs/modget-manifest-api-spec3-0.2.0.jar"))
     // include implementation(files("libs/modget-manifest-api-spec4-0.1.0.jar"))

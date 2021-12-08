@@ -54,13 +54,11 @@ jobs:
     # If this step fails, then you should remove it and run the build manually (see below)
 
     - name: Make Gradle wrapper executable
-        run: chmod +x ./gradlew
-
+      run: chmod +x ./gradlew
     - name: Validate Gradle wrapper
-        uses: gradle/wrapper-validation-action@v1
-
+      uses: gradle/wrapper-validation-action@v1
     - name: Build with Gradle
-        run: ./gradlew build --no-daemon
+      uses: ./gradlew build --no-daemon
 
     # ℹ️ Command-line programs to run using the OS shell.
     # 📚 https://git.io/JvXDl

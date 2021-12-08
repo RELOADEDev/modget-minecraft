@@ -36,8 +36,8 @@
         "fabric-api-base": "*",
         "fabric-command-api-v1": ">=1.1.0+f9b3753b7d",
         "fabric-networking-api-v1": "*",
-        "modmenu": ">=2.0.14",
-        "minecraft": ">=1.17"
+        "modmenu": ">=1.16.22",
+        "minecraft": ">=1.16"
     },
     "recommends": {
         "server_translations_api": "*"

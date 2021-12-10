@@ -11,7 +11,7 @@ The Minecraft Mod Package Manager!
 
 Modget is based on TheBrokenRail's [ModUpdater](https://gitea.thebrokenrail.com/TheBrokenRail/ModUpdater) mod and is inspired heavily by Microsoft's [Winget](https://github.com/microsoft/winget-cli).
 
-**[Mod Menu](https://modrinth.com/mod/modmenu) and [Cloth Config API](https://www.curseforge.com/minecraft/mc-mods/cloth-config) should be installed!**
+**Install [Mod Menu](https://modrinth.com/mod/modmenu) to access the Modget GUI!**
 
 <!-- Nightly builds can be downloaded [here].(https://nightly.link/ReviversMC/modget-minecraft/workflows/build/main/Package.zip) -->
 
@@ -19,23 +19,23 @@ Modget is based on TheBrokenRail's [ModUpdater](https://gitea.thebrokenrail.com/
 ## Commands
 Currently, Modget supports the following commands:
 ```
-/modget list                    Lists all installed mods recognized by modget
-/modget repos list              Lists all installed manifest repositories
-/modget search <mod>            Searches all repositories for the according mod
-/modget upgrade                 Lists all available mod updates
-/modget refresh                 Refreshes the local manifest cache
+/modget list                     Lists all installed mods recognized by modget
+/modget repos list               Lists all installed manifest repositories
+/modget repos add <repo url>     Adds a custom repository
+/modget repos enable <repo id>   Enables the selected repository
+/modget repos disable <repo id>  Disables the selected repository
+/modget repos remove <repo id>   Removes the selected repository
+/modget search <mod>             Searches all repositories for a matching mod
+/modget upgrade                  Lists all available mod updates
+/modget refresh                  Refreshes the local manifest cache
 ```
 
 These additional commands will be added over the next few releases:
 ```
-/modget install <mod>           Downloads the according mod
-/modget uninstall <mod>         Deletes the according mod
-/modget upgrade <mod>           Updates the according mod
-/modget upgrade --all           Updates all mods
-/modget repos add <repo url>    Adds a custom repository
-/modget repos enable <repo id>  Enables the selected repository
-/modget repos disable <repo id> Disables the selected repository
-/modget repos remove <repo id>  Removes the selected repository
+/modget install <mod>            Downloads the according mod
+/modget uninstall <mod>          Deletes the according mod
+/modget upgrade <mod>            Updates the according mod
+/modget upgrade --all            Updates all mods
 ```
 
 If you're on a server, use `/modgetserver` instead of `/modget`.

@@ -29,12 +29,12 @@
         "modget.mixins.json"
     ],
     "depends": {
-        "minecraft": ">=1.17"
+        "minecraft": ">=1.18.1"
     },
     "recommends": {
         "server_translations_api": "*",
-        "modmenu": ">=${modmenu_version_1_17}",
-        "cloth-config2": ">=${cloth_config_version_1_17}"
+        "modmenu": ">=3.0.0",
+        "cloth-config2": ">=6.0.43"
     },
     "custom": {
         "modget": {

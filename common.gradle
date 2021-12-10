@@ -1,0 +1,196 @@
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+
+group = project.maven_group as Object
+
+configurations {
+    includeTransitive {
+        transitive = true
+    }
+}
+
+repositories {
+    // Add repositories to retrieve artifacts from in here.
+    // You should only use this when depending on other mods because
+    // Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
+    // See https://docs.gradle.org/current/userguide/declaring_repositories.html
+    // for more information about repositories.
+    mavenLocal()
+    if (project.use_third_party_mods) {
+        maven {
+            name = "Modrinth"
+            url = "https://api.modrinth.com/maven"
+            content {
+                includeGroup "maven.modrinth"
+            }
+        }
+        maven {
+            url = "https://cursemaven.com"
+            content {
+                includeGroup "curse.maven"
+            }
+        }
+    }
+    maven {
+        url = "https://mvnrepository.com/"
+    }
+    maven {
+        name = "TerraformersMC"
+        url = "https://maven.terraformersmc.com/releases"
+    }
+    maven {
+        url = "https://maven.shedaniel.me/"
+    }
+    maven {
+        name = "JitPack"
+        url = "https://jitpack.io"
+    }
+    maven {
+        name = "NucleoidMC"
+        url = "https://maven.nucleoid.xyz/"
+    }
+    mavenCentral()
+}
+
+dependencies {
+    modImplementation "net.fabricmc:fabric-loader:${project.fabric_loader_version}"
+
+    // Modget Manifest API
+    include implementation("com.github.ReviversMC.modget-manifest-api:compat:${project.modget_manifest_api_version}")
+    include implementation("com.github.ReviversMC.modget-manifest-api:spec3:${project.modget_manifest_api_version}")
+    include implementation("com.github.ReviversMC.modget-manifest-api:spec4:${project.modget_manifest_api_version}")
+    // include implementation(files("libs/modget-manifest-api-compat-0.1.0.jar"))
+    // include implementation(files("libs/modget-manifest-api-spec3-0.2.0.jar"))
+    // include implementation(files("libs/modget-manifest-api-spec4-0.1.0.jar"))
+    include implementation("com.fasterxml.jackson.core:jackson-core:${project.jackson_version}")
+    include implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:${project.jackson_version}")
+    include implementation("com.fasterxml.jackson.core:jackson-databind:${project.jackson_version}")
+    include implementation("com.fasterxml.jackson.core:jackson-annotations:${project.jackson_version}")
+    include implementation("org.yaml:snakeyaml:${project.snakeyaml_version}")
+
+    // Modget Library
+    include implementation("com.github.ReviversMC:modget-lib:${project.modget_lib_version}")
+    // include implementation(files("libs/modget-lib-${project.modget_lib_version}.jar"))
+
+    include implementation("org.apache.commons:commons-text:${project.commons_text_version}")
+
+    compileOnly "com.github.spotbugs:spotbugs:${project.spotbugs_version}"
+}
+
+
+tasks.withType(JavaCompile).configureEach {
+    // ensure that the encoding is set to UTF-8, no matter what the system default is
+    // this fixes some edge cases with special characters not displaying correctly
+    // see http://yodaconditions.net/blog/fix-for-java-file-encoding-problems-with-gradle.html
+    // If Javadoc is generated, this must be specified in that task too.
+    it.options.encoding = "UTF-8"
+}
+
+test {
+    useJUnitPlatform()
+}
+
+
+
+project.afterEvaluate {
+    configurations.includeTransitive.incoming.resolutionResult.allComponents {
+        if (it.id instanceof ModuleComponentIdentifier) {
+            def that = it
+            dependencies {
+                include group: that.id.getGroup(), name: that.id.getModule(), version: that.id.getVersion()
+            }
+        }
+    }
+}
+
+processResources {
+    filesMatching("fabric.mod.json") {
+        expand project.properties
+    }
+}
+
+
+java {
+    // Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
+    // if it is present.
+    // If you remove this line, sources will not be generated.
+    withSourcesJar()
+}
+
+jar {
+    from "LICENSE"
+}
+
+
+// if (project.hasProperty('curseforge.api_key')) {
+//     curseforge {
+//         apiKey = project.getProperty('curseforge.api_key')
+//         project {
+//             id = project.curseforge_id
+//             changelog = 'A changelog can be found at https://gitea.thebrokenrail.com/TheBrokenRail/ModUpdater/src/branch/master/CHANGELOG.md'
+//             releaseType = 'release'
+//             addGameVersion project.simple_minecraft_version
+//             addGameVersion 'Fabric'
+//             mainArtifact(remapJar) {
+//                 displayName = "ModUpdater v${mod_version} for ${project.minecraft_version}"
+//             }
+//             afterEvaluate {
+//                 uploadTask.dependsOn('remapJar')
+//             }
+//             relations {
+//                 requiredDependency 'fabric-api'
+//             }
+//         }
+//         options {
+//             forgeGradleIntegration = false
+//         }
+//     }
+// }
+
+// configure the maven publication
+// publishing {
+//     publications {
+//         mavenJava(MavenPublication) {
+//             // add all the jars that should be included when publishing to maven
+//             artifact(remapJar) {
+//                 builtBy remapJar
+//             }
+//             artifact(sourcesJar) {
+// 				builtBy remapSourcesJar
+// 			}
+//         }
+//     }
+
+//     // See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
+//     repositories {
+//         Add repositories to publish to here.
+//         Notice: This block does NOT have the same function as the block in the top level.
+//         The repositories here will be used for publishing your artifact, not for
+//         retrieving dependencies.
+
+//         maven {
+//             url '/data/maven'
+//         }
+//     }
+// }
+
+//import com.modrinth.minotaur.TaskModrinthUpload
+//import com.modrinth.minotaur.request.VersionType
+//import com.modrinth.minotaur.request.Dependency
+//
+//task publishModrinth (type: TaskModrinthUpload){
+//    onlyIf {
+//        System.getenv("MODRINTH")
+//    }
+//
+//    token = System.getenv("MODRINTH")
+//    projectId = "2NpFE0R3"
+//    versionNumber = version
+//    uploadFile = remapJar
+//    versionType = VersionType.ALPHA
+//    addGameVersion(project.minecraft_version)
+//    addLoader("fabric")
+//    addDependency("JPP6w2U1", Dependency.DependencyType.REQUIRED)
+//    changelog = file("CHANGELOG.md").getText("UTF-8")
+//    enabled = true
+//}

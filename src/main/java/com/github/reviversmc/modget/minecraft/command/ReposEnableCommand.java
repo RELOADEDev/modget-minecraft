@@ -16,6 +16,8 @@ import net.minecraft.text.Style;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 
+import java.util.Objects;
+
 public class ReposEnableCommand extends CommandBase {
     private static final String PARENT_COMMAND = "repos";
     private static final String COMMAND = "enable";
@@ -48,7 +50,7 @@ public class ReposEnableCommand extends CommandBase {
                     .then(ClientCommandManager.argument("repoID", IntegerArgumentType.integer()).executes(context -> {
                         PlayerEntity player = ClientPlayerHack.getPlayer(context);
 
-                        if (Modget.modPresentOnServer == true && player.hasPermissionLevel(PERMISSION_LEVEL)) {
+                        if (Modget.modPresentOnServer && player.hasPermissionLevel(PERMISSION_LEVEL)) {
                             player.sendMessage(new TranslatableText("info." + Modget.NAMESPACE + ".use_for_server_mods", Modget.NAMESPACE_SERVER)
                                 .setStyle(Style.EMPTY.withColor(Formatting.BLUE)), false
                             );
@@ -65,7 +67,7 @@ public class ReposEnableCommand extends CommandBase {
 
 
     public void executeCommand(PlayerEntity player, int repoId) throws NoSuchRepoException {
-        if (ModgetManager.REPO_MANAGER.getRepo(repoId).isEnabled() == true) {
+        if (ModgetManager.REPO_MANAGER.getRepo(repoId).isEnabled()) {
             player.sendMessage(new TranslatableText(String.format("error.%s.repo_already_enabled", Modget.NAMESPACE))
                     .formatted(Formatting.RED), false);
             return;
@@ -77,7 +79,7 @@ public class ReposEnableCommand extends CommandBase {
             repo.setEnabled(true);
         } catch (NoSuchRepoException e) {
             player.sendMessage(new TranslatableText(String.format("error.%s.repo_not_found", Modget.NAMESPACE),
-                repoId, ENVIRONMENT == "CLIENT" ? Modget.NAMESPACE : Modget.NAMESPACE_SERVER
+                repoId, Objects.equals(ENVIRONMENT, "CLIENT") ? Modget.NAMESPACE : Modget.NAMESPACE_SERVER
             ).formatted(Formatting.RED), false);
             throw e;
         }
@@ -99,16 +101,15 @@ public class ReposEnableCommand extends CommandBase {
         @Override
         public void run() {
             super.run();
-            if (isRunning == true) {
+            if (isRunning) {
                 return;
             }
 
             isRunning = true;
             try {
                 executeCommand(player, repoId);
-            } catch (NoSuchRepoException e) {}
+            } catch (NoSuchRepoException ignored) {}
             isRunning = false;
         }
     }
-
 }

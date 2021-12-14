@@ -31,7 +31,7 @@ public abstract class CommandBase {
 	abstract void registerClient();
 
 
-    public abstract class StartThread extends Thread {
+    public abstract static class StartThread extends Thread {
         public PlayerEntity player;
 
         public StartThread(PlayerEntity player) {
@@ -39,12 +39,11 @@ public abstract class CommandBase {
         }
 
         public void run() {
-            if (isRunning == true) {
+            if (isRunning) {
                 player.sendMessage(new TranslatableText("error." + Modget.NAMESPACE + ".command_already_processing")
                     .formatted(Formatting.RED), false
                 );
             }
         }
     }
-
 }

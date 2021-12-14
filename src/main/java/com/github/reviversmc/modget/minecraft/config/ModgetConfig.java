@@ -11,7 +11,7 @@ import java.util.Properties;
 
 public class ModgetConfig {
     public static final List<String> DEFAULT_REPOS = new ArrayList<>(
-        Arrays.asList(
+        List.of(
             "https://raw.githubusercontent.com/ReviversMC/modget-manifests"
             // ,
             // "https://raw.githubusercontent.com/thefirethirteen/modget-manifests"
@@ -84,7 +84,7 @@ public class ModgetConfig {
 
     public int getStringProperty(String key) {
         load();
-        return Integer.valueOf(properties.getProperty(key));
+        return Integer.parseInt(properties.getProperty(key));
     }
 
 
@@ -105,7 +105,7 @@ public class ModgetConfig {
     }
 
     private void load() {
-        if (loaded == true) {
+        if (loaded) {
             return;
         }
 

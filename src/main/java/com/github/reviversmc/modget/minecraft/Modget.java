@@ -46,7 +46,7 @@ public class Modget implements ModInitializer {
 
     @Override
     public void onInitialize() {
-        new Thread(() -> ModgetManager.init()).start();
+        new Thread(ModgetManager::init).start();
 
         // Register Commands
         String env = FabricLoader.getInstance().getEnvironmentType().name(); // Returns client or server
@@ -73,6 +73,6 @@ public class Modget implements ModInitializer {
 
             });
 
-        } catch (Exception e) {}
+        } catch (Exception ignored) {}
     }
 }

@@ -2,7 +2,9 @@ package com.github.reviversmc.modget.minecraft.command;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
+import com.github.reviversmc.modget.library.data.ModUpdate;
 import com.github.reviversmc.modget.library.util.ModUpdateChecker;
 import com.github.reviversmc.modget.manifests.spec4.api.data.manifest.common.NameUrlPair;
 import com.github.reviversmc.modget.manifests.spec4.api.data.manifest.main.ModManifest;
@@ -55,7 +57,7 @@ public class UpgradeCommand extends CommandBase {
             .then(LiteralArgumentBuilder.<FabricClientCommandSource>literal(COMMAND).executes(context -> {
                 PlayerEntity player = ClientPlayerHack.getPlayer(context);
 
-                if (Modget.modPresentOnServer == true && player.hasPermissionLevel(PERMISSION_LEVEL)) {
+                if (Modget.modPresentOnServer && player.hasPermissionLevel(PERMISSION_LEVEL)) {
                     player.sendMessage(new TranslatableText("info." + Modget.NAMESPACE + ".use_for_server_mods", Modget.NAMESPACE_SERVER)
                         .setStyle(Style.EMPTY.withColor(Formatting.BLUE)), false
                     );
@@ -70,8 +72,8 @@ public class UpgradeCommand extends CommandBase {
 
 
     public void executeCommand(PlayerEntity player) {
-        if (ModgetManager.getInitializationError() == true) {
-            player.sendMessage(new TranslatableText(String.format("info.%s.init_failed_try_running_refresh", Modget.NAMESPACE), ENVIRONMENT == "CLIENT" ? Modget.NAMESPACE : Modget.NAMESPACE_SERVER)
+        if (ModgetManager.getInitializationError()) {
+            player.sendMessage(new TranslatableText(String.format("info.%s.init_failed_try_running_refresh", Modget.NAMESPACE), Objects.equals(ENVIRONMENT, "CLIENT") ? Modget.NAMESPACE : Modget.NAMESPACE_SERVER)
                     .formatted(Formatting.YELLOW), false);
             return;
         }
@@ -83,22 +85,22 @@ public class UpgradeCommand extends CommandBase {
         List<Text> messages = new ArrayList<>(15);
 
         for (InstalledMod mod : ModgetManager.getRecognizedMods()) {
-            Pair<ModVersionVariant, List<Exception>> update;
+            Pair<ModUpdate, List<Exception>> update;
             try {
                 update = ModUpdateChecker.create().searchForModUpdate(mod, ModgetManager.REPO_MANAGER.getRepos(), Utils.create().getMinecraftVersion(), "fabric");
             } catch (Exception e) {
-                errorMessageBuilder.append("\n" + e.getMessage());
+                errorMessageBuilder.append("\n").append(e.getMessage());
                 continue;
             }
 
             for (Exception e : update.getRight()) {
-                errorMessageBuilder.append("\n" + e.getMessage());
+                errorMessageBuilder.append("\n").append(e.getMessage());
             }
             if (update.getLeft() == null) {
                 continue;
             }
 
-            ModVersionVariant modVersionVariant = update.getLeft();
+            ModVersionVariant modVersionVariant = (ModVersionVariant) update.getLeft();
             ModVersion modVersion = modVersionVariant.getParentVersion();
             ModManifest modManifest = modVersion.getParentManifest();
             ModPackage modPackage = modManifest.getParentPackage();
@@ -149,7 +151,7 @@ public class UpgradeCommand extends CommandBase {
         }
 
         if (errorMessageBuilder.length() != 0) {
-            player.sendMessage(new TranslatableText("Errors occurred while searching for updates:" + errorMessageBuilder.toString())
+            player.sendMessage(new TranslatableText("Errors occurred while searching for updates:" + errorMessageBuilder)
                     .formatted(Formatting.RED), false);
         }
 
@@ -166,7 +168,7 @@ public class UpgradeCommand extends CommandBase {
         @Override
         public void run() {
             super.run();
-            if (isRunning == true) {
+            if (isRunning) {
                 return;
             }
 

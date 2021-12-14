@@ -20,7 +20,7 @@ import net.fabricmc.loader.api.ModContainer;
 
 public class ModgetManager {
 	public final static RepoManager REPO_MANAGER = new RepoManager();
-	private static volatile List<InstalledMod> installedMods = new ArrayList<>(20);
+	private static final List<InstalledMod> installedMods = new ArrayList<>(20);
 	private static volatile List<InstalledMod> recognizedMods = new ArrayList<>(10);
 	private static volatile boolean initializationError = false;
 
@@ -38,29 +38,25 @@ public class ModgetManager {
 	}
 
 	public static void reload(boolean refreshRepos) throws Exception {
-		try {
-            if (refreshRepos == true) {
-                REPO_MANAGER.refresh();
+        if (refreshRepos) {
+            REPO_MANAGER.refresh();
+        }
+
+        try {
+            ManifestRepositoryUtils utils = new ManifestRepositoryUtils();
+            for (ManifestRepository repo : REPO_MANAGER.getRepos()) {
+                if (utils.checkForNewVersion(repo)) {
+                    Modget.logInfo(String.format("A new version of Repo %s has been detected! Please update Modget to be able to use it.", repo.getId()));
+                    CommandBase.setManifestApiOutdated(true);
+                }
             }
+        } catch (Exception e) {
+            Modget.logWarn("Error while checking for repo updates", ExceptionUtils.getStackTrace(e));
+        }
 
-			try {
-				ManifestRepositoryUtils utils = new ManifestRepositoryUtils();
-				for (ManifestRepository repo : REPO_MANAGER.getRepos()) {
-					if (utils.checkForNewVersion(repo) == true) {
-						Modget.logInfo(String.format("A new version of Repo %s has been detected! Please update Modget to be able to use it.", repo.getId()));
-						CommandBase.setManifestApiOutdated(true);
-					}
-				}
-			} catch (Exception e) {
-				Modget.logWarn("Error while checking for repo updates", ExceptionUtils.getStackTrace(e));
-			}
-
-			recognizedMods = ModScanner.create().scanMods(installedMods, ModgetConfig.IGNORED_MODS, REPO_MANAGER.getRepos());
-			initializationError = false;
-		} catch (Exception e) {
-			throw e;
-		}
-	}
+        recognizedMods = ModScanner.create().scanMods(installedMods, ModgetConfig.IGNORED_MODS, REPO_MANAGER.getRepos());
+        initializationError = false;
+    }
 
 
 	public static void scanMods() {

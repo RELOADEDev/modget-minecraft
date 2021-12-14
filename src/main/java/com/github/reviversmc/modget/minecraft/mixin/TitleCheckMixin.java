@@ -28,4 +28,3 @@ public class TitleCheckMixin extends Screen {
 //        t.start();
     }
 }
-

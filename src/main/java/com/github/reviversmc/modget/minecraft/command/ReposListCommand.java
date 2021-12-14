@@ -46,7 +46,7 @@ public class ReposListCommand extends CommandBase {
                 .then(LiteralArgumentBuilder.<FabricClientCommandSource>literal(COMMAND).executes(context -> {
                     PlayerEntity player = ClientPlayerHack.getPlayer(context);
 
-                    if (Modget.modPresentOnServer == true && player.hasPermissionLevel(PERMISSION_LEVEL)) {
+                    if (Modget.modPresentOnServer && player.hasPermissionLevel(PERMISSION_LEVEL)) {
                         player.sendMessage(new TranslatableText("info." + Modget.NAMESPACE + ".use_for_server_mods", "/modgetserver")
                             .setStyle(Style.EMPTY.withColor(Formatting.BLUE)), false
                         );
@@ -71,7 +71,7 @@ public class ReposListCommand extends CommandBase {
         // Get mod names
         for (int i = 0; i < ModgetManager.REPO_MANAGER.getRepos().size(); i++) {
             ManifestRepository repo = ModgetManager.REPO_MANAGER.getRepos().get(i);
-            messages.add(String.format("%s: %s", Integer.toString(repo.getId()), repo.getUri()));
+            messages.add(String.format("%s: %s", repo.getId(), repo.getUri()));
         }
         java.util.Collections.sort(messages);
 
@@ -92,7 +92,7 @@ public class ReposListCommand extends CommandBase {
         @Override
         public void run() {
             super.run();
-            if (isRunning == true) {
+            if (isRunning) {
                 return;
             }
 
@@ -101,5 +101,4 @@ public class ReposListCommand extends CommandBase {
             isRunning = false;
         }
     }
-
 }

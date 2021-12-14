@@ -59,7 +59,7 @@ public class SearchCommand extends CommandBase {
                 .then(ClientCommandManager.argument("term", StringArgumentType.greedyString()).executes(context -> {
                     PlayerEntity player = ClientPlayerHack.getPlayer(context);
 
-                    if (Modget.modPresentOnServer == true && player.hasPermissionLevel(PERMISSION_LEVEL)) {
+                    if (Modget.modPresentOnServer && player.hasPermissionLevel(PERMISSION_LEVEL)) {
                         player.sendMessage(new TranslatableText("info." + Modget.NAMESPACE + ".use_for_server_mods", Modget.NAMESPACE_SERVER)
                             .setStyle(Style.EMPTY.withColor(Formatting.BLUE)), false
                         );
@@ -137,7 +137,7 @@ public class SearchCommand extends CommandBase {
 
         StringBuilder errorMessageBuilder = new StringBuilder();
         for (Exception e : versionVariantsFoundWithExceptions.getRight()) {
-            errorMessageBuilder.append("\n" + e.getMessage());
+            errorMessageBuilder.append("\n").append(e.getMessage());
         }
 
         player.sendMessage(new TranslatableText(messageTitle)
@@ -148,7 +148,7 @@ public class SearchCommand extends CommandBase {
         }
 
         if (errorMessageBuilder.length() != 0) {
-            player.sendMessage(new TranslatableText("Errors occurred while searching for mods:" + errorMessageBuilder.toString())
+            player.sendMessage(new TranslatableText("Errors occurred while searching for mods:" + errorMessageBuilder)
                     .formatted(Formatting.RED), false);
         }
     }
@@ -156,8 +156,8 @@ public class SearchCommand extends CommandBase {
 
 
     private class StartThread extends CommandBase.StartThread {
-        private PlayerEntity player;
-        private String term = "";
+        private final PlayerEntity player;
+        private final String term;
 
         public StartThread(PlayerEntity player, String term) {
             super(player);
@@ -168,7 +168,7 @@ public class SearchCommand extends CommandBase {
         @Override
         public void run() {
             super.run();
-            if (isRunning == true) {
+            if (isRunning) {
                 return;
             }
 

@@ -2,6 +2,7 @@ package com.github.reviversmc.modget.minecraft.command;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import com.github.reviversmc.modget.manifests.spec4.api.data.mod.InstalledMod;
 import com.github.reviversmc.modget.minecraft.Modget;
@@ -44,7 +45,7 @@ public class ListCommand extends CommandBase {
             .then(LiteralArgumentBuilder.<FabricClientCommandSource>literal(COMMAND).executes(context -> {
                 PlayerEntity player = ClientPlayerHack.getPlayer(context);
 
-                if (Modget.modPresentOnServer == true && player.hasPermissionLevel(PERMISSION_LEVEL)) {
+                if (Modget.modPresentOnServer && player.hasPermissionLevel(PERMISSION_LEVEL)) {
                     player.sendMessage(new TranslatableText("info." + Modget.NAMESPACE + ".use_for_server_mods", "/modgetserver")
                         .setStyle(Style.EMPTY.withColor(Formatting.BLUE)), false
                     );
@@ -59,8 +60,8 @@ public class ListCommand extends CommandBase {
 
 
     public void executeCommand(PlayerEntity player) {
-        if (ModgetManager.getInitializationError() == true) {
-            player.sendMessage(new TranslatableText(String.format("info.%s.init_failed_try_running_refresh", Modget.NAMESPACE), ENVIRONMENT == "CLIENT" ? Modget.NAMESPACE : Modget.NAMESPACE_SERVER)
+        if (ModgetManager.getInitializationError()) {
+            player.sendMessage(new TranslatableText(String.format("info.%s.init_failed_try_running_refresh", Modget.NAMESPACE), Objects.equals(ENVIRONMENT, "CLIENT") ? Modget.NAMESPACE : Modget.NAMESPACE_SERVER)
                     .formatted(Formatting.YELLOW), false);
             return;
         }
@@ -94,7 +95,7 @@ public class ListCommand extends CommandBase {
         @Override
         public void run() {
             super.run();
-            if (isRunning == true) {
+            if (isRunning) {
                 return;
             }
 
@@ -103,5 +104,4 @@ public class ListCommand extends CommandBase {
             isRunning = false;
         }
     }
-
 }

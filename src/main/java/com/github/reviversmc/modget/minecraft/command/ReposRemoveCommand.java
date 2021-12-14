@@ -15,6 +15,8 @@ import net.minecraft.text.Style;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 
+import java.util.Objects;
+
 public class ReposRemoveCommand extends CommandBase {
     private static final String PARENT_COMMAND = "repos";
     private static final String COMMAND = "remove";
@@ -47,7 +49,7 @@ public class ReposRemoveCommand extends CommandBase {
                     .then(ClientCommandManager.argument("repoID", IntegerArgumentType.integer()).executes(context -> {
                         PlayerEntity player = ClientPlayerHack.getPlayer(context);
 
-                        if (Modget.modPresentOnServer == true && player.hasPermissionLevel(PERMISSION_LEVEL)) {
+                        if (Modget.modPresentOnServer && player.hasPermissionLevel(PERMISSION_LEVEL)) {
                             player.sendMessage(new TranslatableText("info." + Modget.NAMESPACE + ".use_for_server_mods", Modget.NAMESPACE_SERVER)
                                 .setStyle(Style.EMPTY.withColor(Formatting.BLUE)), false
                             );
@@ -66,7 +68,7 @@ public class ReposRemoveCommand extends CommandBase {
     public void executeCommand(PlayerEntity player, int repoId) throws NoSuchRepoException {
         if (repoId == 0) {
             player.sendMessage(new TranslatableText(String.format("error.%s.repo_not_removable", Modget.NAMESPACE),
-                ENVIRONMENT == "CLIENT" ? Modget.NAMESPACE : Modget.NAMESPACE_SERVER
+                Objects.equals(ENVIRONMENT, "CLIENT") ? Modget.NAMESPACE : Modget.NAMESPACE_SERVER
             ).formatted(Formatting.RED), false);
             throw new NoSuchRepoException();
         }
@@ -75,7 +77,7 @@ public class ReposRemoveCommand extends CommandBase {
             ModgetManager.REPO_MANAGER.removeRepo(repoId);
         } catch (NoSuchRepoException e) {
             player.sendMessage(new TranslatableText(String.format("error.%s.repo_not_found", Modget.NAMESPACE),
-                repoId, ENVIRONMENT == "CLIENT" ? Modget.NAMESPACE : Modget.NAMESPACE_SERVER
+                repoId, Objects.equals(ENVIRONMENT, "CLIENT") ? Modget.NAMESPACE : Modget.NAMESPACE_SERVER
             ).formatted(Formatting.RED), false);
             throw e;
         }
@@ -96,7 +98,7 @@ public class ReposRemoveCommand extends CommandBase {
         @Override
         public void run() {
             super.run();
-            if (isRunning == true) {
+            if (isRunning) {
                 return;
             }
 
@@ -104,9 +106,8 @@ public class ReposRemoveCommand extends CommandBase {
             try {
                 executeCommand(player, repoId);
                 new RefreshCommand().executeCommand(player);
-            } catch (NoSuchRepoException e) {}
+            } catch (NoSuchRepoException ignored) {}
             isRunning = false;
         }
     }
-
 }

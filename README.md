@@ -77,5 +77,5 @@ We have an [official Discord community](https://discord.gg/6bTGYFppfz) for all o
 
 ## Contributors
 <a href="https://github.com/ReviversMC/modget-minecraft/graphs/contributors">
-  <img height="40em" src="https://contrib.rocks/image?repo=ReviversMC/modget-minecraft" />
+  <img height="40em" src="https://contrib.rocks/image?repo=ReviversMC/modget-minecraft" alt="Contributors"/>
 </a>

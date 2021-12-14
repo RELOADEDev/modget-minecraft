@@ -7,7 +7,6 @@ import net.minecraft.entity.player.PlayerEntity;
 public class ClientPlayerHack {
 
     public static PlayerEntity getPlayer(CommandContext<FabricClientCommandSource> ctx) {
-        PlayerEntity player = ctx.getSource().getPlayer();
-        return player;
+        return ctx.getSource().getPlayer();
     }
 }

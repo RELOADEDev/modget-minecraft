@@ -50,7 +50,7 @@ public class ReposAddCommand extends CommandBase {
                     .then(ClientCommandManager.argument("repoURL", StringArgumentType.greedyString()).executes(context -> {
                         PlayerEntity player = ClientPlayerHack.getPlayer(context);
 
-                        if (Modget.modPresentOnServer == true && player.hasPermissionLevel(PERMISSION_LEVEL)) {
+                        if (Modget.modPresentOnServer && player.hasPermissionLevel(PERMISSION_LEVEL)) {
                             player.sendMessage(new TranslatableText("info." + Modget.NAMESPACE + ".use_for_server_mods", Modget.NAMESPACE_SERVER)
                                 .setStyle(Style.EMPTY.withColor(Formatting.BLUE)), false
                             );
@@ -105,7 +105,7 @@ public class ReposAddCommand extends CommandBase {
         @Override
         public void run() {
             super.run();
-            if (isRunning == true) {
+            if (isRunning) {
                 return;
             }
 
@@ -113,9 +113,8 @@ public class ReposAddCommand extends CommandBase {
             try {
                 executeCommand(player, repoUri);
                 new RefreshCommand().executeCommand(player);
-            } catch (RepoAlreadyExistsException e) {}
+            } catch (RepoAlreadyExistsException ignored) {}
             isRunning = false;
         }
     }
-
 }

@@ -41,7 +41,7 @@ public class RefreshCommand extends CommandBase {
             .then(LiteralArgumentBuilder.<FabricClientCommandSource>literal(COMMAND).executes(context -> {
                 PlayerEntity player = ClientPlayerHack.getPlayer(context);
 
-                if (Modget.modPresentOnServer == true && player.hasPermissionLevel(PERMISSION_LEVEL)) {
+                if (Modget.modPresentOnServer && player.hasPermissionLevel(PERMISSION_LEVEL)) {
                     player.sendMessage(new TranslatableText("info." + Modget.NAMESPACE + ".use_for_server_mods", "/modgetserver")
                         .setStyle(Style.EMPTY.withColor(Formatting.BLUE)), false
                     );
@@ -92,7 +92,7 @@ public class RefreshCommand extends CommandBase {
         @Override
         public void run() {
             super.run();
-            if (isRunning == true) {
+            if (isRunning) {
                 return;
             }
 
@@ -101,5 +101,4 @@ public class RefreshCommand extends CommandBase {
             isRunning = false;
         }
     }
-
 }

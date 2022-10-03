@@ -65,7 +65,7 @@ dependencies {
     include implementation("com.github.ReviversMC.modget-manifest-api:spec3:0.2.1")
     include implementation("com.github.ReviversMC.modget-manifest-api:spec4:0.2.1")
     include implementation("com.fasterxml.jackson.core:jackson-core:2.13.4")
-    include implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.13.0")
+    include implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.13.4")
     include implementation("com.fasterxml.jackson.core:jackson-databind:2.13.4")
     include implementation("com.fasterxml.jackson.core:jackson-annotations:2.13.0")
     include implementation("org.yaml:snakeyaml:1.30")
